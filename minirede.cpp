@@ -1,4 +1,4 @@
-#include "minirede.h"
+#include "base.cpp"
 
 void inicializarMiniRede(MiniRede& rede) {
     // TODO

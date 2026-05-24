@@ -1,7 +1,12 @@
 #ifndef MINI_REDE_H
 #define MINI_REDE_H
 
+#include "listaDuplamente.cpp"
+#include "fila.cpp"
 #include <iostream>
+#include <string>
+
+using namespace std;
 
 const int TAM_USERNAME = 50;
 const int TAM_NOME = 100;
@@ -29,6 +34,22 @@ struct MiniRede {
     // - usuarios acessiveis por username
     // - publicacoes cadastradas
 };
+
+struct usuario{
+    int id;
+    string usuario;
+    string nome_completo;
+    Lista usuarios_seguindo;
+    Lista publicacoes_postadas;
+    Fila notificacoes;
+
+};
+
+struct publicacao{
+    int id_publi;
+
+};
+
 
 void inicializarMiniRede(MiniRede& rede);
 void liberarMiniRede(MiniRede& rede);
