@@ -1,10 +1,9 @@
 #ifndef MINI_REDE_H
 #define MINI_REDE_H
 
-#include "listaDuplamente.cpp"
-#include "fila.cpp"
-#include <iostream>
 #include <string>
+#include "listaDuplamente.h"
+#include "fila.h"
 
 using namespace std;
 
@@ -25,18 +24,33 @@ const int TAM_COMANDO = 30;
 // - nos para fila de notificacoes
 //
 // Os campos de cada struct fazem parte do projeto dos alunos.
+struct No {
+    int valor;
+    No* prox;
+    No* ant;      
+};
+
+struct Lista {
+    No* inicio;
+    No* fim;
+};
+
+struct Fila {
+    No* inicio;
+    No* fim;
+};
+
+
 
 struct MiniRede {
-    // TODO: declarar aqui os ponteiros/estruturas principais da rede.
-    //
-    // Exemplos de responsabilidades:
-    // - usuarios armazenados por id
-    // - usuarios acessiveis por username
-    // - publicacoes cadastradas
+    //ArvoreBinaria usuarios_por_id;
+    //TabelaHash usuarios_por_username;
+    Lista publicacoes; 
+
 };
 
 struct usuario{
-    int id;
+    int id_usuario;
     string usuario;
     string nome_completo;
     Lista usuarios_seguindo;
@@ -47,8 +61,13 @@ struct usuario{
 
 struct publicacao{
     int id_publi;
-
+    int id_usuario;
+    int timestamp;
+    string texto;
+    int likes;
+    Lista likers;
 };
+
 
 
 void inicializarMiniRede(MiniRede& rede);
@@ -81,5 +100,6 @@ void listarTopPosts(MiniRede& rede, int k, std::ostream& saida);
 // - enfileirar/desenfileirar notificacoes
 // - manipular listas encadeadas
 // - ordenar vetores auxiliares para feed e ranking
+
 
 #endif

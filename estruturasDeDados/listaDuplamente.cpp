@@ -1,16 +1,9 @@
 #include <iostream>
+#include "base.h"
+#include "listaDuplamente.h"
+#include <iostream>
+
 using namespace std;
-
-struct No {
-    int valor;
-    No* prox;
-    No* ant;
-};
-
-struct Lista {
-    No* inicio;
-    No* fim;
-};
 
 void inicializar(Lista &L) {
     L.inicio = nullptr;
@@ -87,7 +80,6 @@ bool remover_valor(Lista &L, int valor) {
                     //remove primeiro nó caso ele seja o único
                     delete atual;
                     L.inicio = nullptr;
-                    cout << "*";
                     return true;
                 }else{
                     // remove ultimo nó

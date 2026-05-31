@@ -1,12 +1,7 @@
-struct No{
-    int valor;
-    No* prox;
-};
 
-struct Fila {
-    No* inicio;
-    No* fim;
-};
+#include "base.h"
+#include "fila.h"
+#include <iostream>
 
 void inicializar_fila(Fila &F) {
     F.inicio = nullptr;
