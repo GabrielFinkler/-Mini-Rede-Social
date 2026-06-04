@@ -1,9 +1,9 @@
-#include "base.h"
+#include "base.hpp"
 #include <iostream>
 
 
 void inicializarMiniRede(MiniRede& rede) {
-    // TODO
+    inicializar_hash(rede.usuarios_por_username, 1009);
 }
 
 void liberarMiniRede(MiniRede& rede) {
@@ -17,9 +17,21 @@ void processarComandos(MiniRede& rede, std::istream& entrada, std::ostream& said
 }
 
 void cadastrarUsuario(MiniRede& rede, int id, const char username[], const char nomeCompleto[], std::ostream& saida) {
-    // TODO
-}
+// Cria o usuário de verdade na memória Heap
+    Usuario* novoUser = new Usuario;
+    novoUser->id_usuario = id;
+    novoUser->username = username;
+    novoUser->nome_completo = nomeCompleto;
+    // ... (inicializa as listas e filas de dentro dele) ...
 
+    // Salva na Árvore para busca por ID e listagem
+    inserir_arvore(rede.usuarios_por_id, novoUser->id_usuario, novoUser);
+
+    // Salva na Hash para busca por nome
+    inserir_hash(rede.usuarios_por_username, novoUser->username, novoUser);
+
+    saida << "Usuario cadastrado com sucesso!\n";
+}
 void buscarUsuarioPorId(MiniRede& rede, int id, std::ostream& saida) {
     // TODO
 }

@@ -2,8 +2,10 @@
 #define MINI_REDE_H
 
 #include <string>
-#include "listaDuplamente.h"
-#include "fila.h"
+#include "listaDuplamente.hpp"
+#include "fila.hpp"
+#include "tabelahash.hpp"
+#include "arvoreBinaria.hpp"
 
 using namespace std;
 
@@ -24,48 +26,43 @@ const int TAM_COMANDO = 30;
 // - nos para fila de notificacoes
 //
 // Os campos de cada struct fazem parte do projeto dos alunos.
+template <typename T>
 struct No {
-    int valor;
-    No* prox;
-    No* ant;      
+    T valor;         
+    No*  prox;  
+    No*  ant;
+
+    // Construtor 
+    No(T value) : valor(value), prox(nullptr), ant(nullptr) {}
 };
 
-struct Lista {
-    No* inicio;
-    No* fim;
-};
-
-struct Fila {
-    No* inicio;
-    No* fim;
-};
 
 
 
 struct MiniRede {
-    //ArvoreBinaria usuarios_por_id;
-    //TabelaHash usuarios_por_username;
-    Lista publicacoes; 
+    ArvoreBinaria usuarios_por_id;
+    TabelaHashUsuarios usuarios_por_username;
+    Lista<Publicacao> publicacoes; 
 
 };
 
-struct usuario{
+struct Usuario{
     int id_usuario;
-    string usuario;
+    string username;
     string nome_completo;
-    Lista usuarios_seguindo;
-    Lista publicacoes_postadas;
-    Fila notificacoes;
+    Lista<Usuario> usuarios_seguindo;
+    Lista<Publicacao> publicacoes_postadas;
+    Fila<string> notificacoes;
 
 };
 
-struct publicacao{
+struct Publicacao{
     int id_publi;
     int id_usuario;
     int timestamp;
     string texto;
     int likes;
-    Lista likers;
+    Lista<Usuario> likers;
 };
 
 

@@ -1,20 +1,30 @@
 #include <iostream>
-#include "base.h"
-#include "listaDuplamente.h"
-#include <iostream>
 
 using namespace std;
 
-void inicializar(Lista &L) {
+
+template <typename T>
+struct Lista {
+    No<T>* inicio; 
+    No<T>* fim;
+
+    // Construtor da lista 
+    Lista() : inicio(nullptr), fim(nullptr) {}
+};
+
+template <typename T>
+void inicializar(Lista<T> &L) {
     L.inicio = nullptr;
     L.fim = nullptr;
 }
 
-bool vazia(const Lista &L) {
+template <typename T>
+bool vazia(const Lista<T> &L) {
     return L.inicio == nullptr;
 }
 
-bool eh_circular(const Lista &L) {
+template <typename T>
+bool eh_circular(const Lista<T> &L) {
     if (vazia(L)) 
         return false;
     if(L.fim->prox == L.inicio && L.inicio->ant == L.fim ){
@@ -23,24 +33,25 @@ bool eh_circular(const Lista &L) {
     return false;
 }
 
-void tornar_circular(Lista &L) {
+template <typename T>
+void tornar_circular(Lista<T> &L) {
     if (vazia(L)) 
         return;
     L.fim->prox = L.inicio;
     L.inicio->ant = L.fim;
 }
 
-void desfazer_circular(Lista &L) {
+template <typename T>
+void desfazer_circular(Lista<T> &L) {
     if (!eh_circular(L)) return;
     L.inicio->ant = nullptr;
     L.fim->prox = nullptr;
 }
 
-void inserir_inicio(Lista &L, int valor) {
-    No* novo = new No(); 
-    novo->valor = valor;
-    novo->ant = nullptr;
-    novo->prox = nullptr;
+template <typename T>
+void inserir_inicio(Lista<T> &L, T valor) {
+    No<T>* novo = new No<T>(valor); 
+    
     if(L.inicio == nullptr){
         L.inicio = novo;
         L.fim = novo;
@@ -49,15 +60,13 @@ void inserir_inicio(Lista &L, int valor) {
         L.inicio->ant = novo;
         L.inicio = novo;
     }
-
 }
 
-void inserir_final(Lista &L, int valor) {
-    No* novo = new No();
-    novo->valor = valor;
-    novo->prox = nullptr; 
+template <typename T>
+void inserir_final(Lista<T> &L, T valor) {
+    No<T>* novo = new No<T>(valor);
+    
     if(L.inicio == nullptr){
-        novo->ant = nullptr;
         L.inicio = novo;
         L.fim = novo;
     }else{
@@ -67,12 +76,12 @@ void inserir_final(Lista &L, int valor) {
     }
 }
 
-bool remover_valor(Lista &L, int valor) {
+template <typename T>
+bool remover_valor(Lista<T> &L, T valor) {
     if(L.inicio == nullptr){
-        //cout << "A lista está vazia";
         return false;
     }
-    No* atual = L.inicio;
+    No<T>* atual = L.inicio;
     while(atual != nullptr){
         if(atual->valor == valor){
             if(atual->prox == nullptr){
@@ -80,10 +89,12 @@ bool remover_valor(Lista &L, int valor) {
                     //remove primeiro nó caso ele seja o único
                     delete atual;
                     L.inicio = nullptr;
+                    L.fim = nullptr; 
                     return true;
                 }else{
                     // remove ultimo nó
                     atual->ant->prox = nullptr;
+                    L.fim = atual->ant; Atualizar o ponteiro fim da lista
                     delete atual;
                     return true;
                 }
@@ -103,12 +114,12 @@ bool remover_valor(Lista &L, int valor) {
             }
         }
         atual = atual->prox;
-
     } 
     return false;
 }
 
-void imprimir_frente(const Lista &L) {
+template <typename T>
+void imprimir_frente(const Lista<T> &L) {
     if (vazia(L)) {
         cout << "[ ]\n";
         return;
@@ -119,7 +130,7 @@ void imprimir_frente(const Lista &L) {
         return;
     }
 
-    No* atual = L.inicio;
+    No<T>* atual = L.inicio;
     cout << "[ ";
     while (atual != nullptr) {
         cout << atual->valor << " ";
@@ -128,7 +139,8 @@ void imprimir_frente(const Lista &L) {
     cout << "]\n";
 }
 
-void imprimir_reverso(const Lista &L) {
+template <typename T>
+void imprimir_reverso(const Lista<T> &L) {
     if (vazia(L)) {
         cout << "[ ]\n";
         return;
@@ -139,7 +151,7 @@ void imprimir_reverso(const Lista &L) {
         return;
     }
 
-    No* atual = L.fim;
+    No<T>* atual = L.fim;
     cout << "[ ";
     while (atual != nullptr) {
         cout << atual->valor << " ";
@@ -148,27 +160,33 @@ void imprimir_reverso(const Lista &L) {
     cout << "]\n";
 }
 
-
-void imprimir_circular(Lista &L, int n) {
-    No* atual = L.inicio;
+template <typename T>
+void imprimir_circular(Lista<T> &L, int n) {
+    if (vazia(L)) {
+        cout << "[ ]\n";
+        return;
+    }
+    
+    No<T>* atual = L.inicio;
     cout << "[ ";
-    for (int i =0;i < n; i++) {
+    for (int i = 0; i < n; i++) {
         cout << atual->valor << " ";
         atual = atual->prox;
     }
     cout << "]\n";
 }
 
-void liberar_lista(Lista &L) {
+template <typename T>
+void liberar_lista(Lista<T> &L) {
     if (vazia(L)) return;
 
     if (eh_circular(L)) {
         desfazer_circular(L);
     }
 
-    No* atual = L.inicio;
+    No<T>* atual = L.inicio;
     while (atual != nullptr) {
-        No* temp = atual;
+        No<T>* temp = atual;
         atual = atual->prox;
         delete temp;
     }
