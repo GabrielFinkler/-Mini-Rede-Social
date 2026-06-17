@@ -23,17 +23,32 @@ void processarComandos(MiniRede& rede, std::istream& entrada, std::ostream& said
         string username;
         string nome_completo;
         entrada >> id >> username >> nome_completo;
-
-        saida << id << username << nome_completo;
-
+        Usuario* temp = nullptr;
+        if (buscar_arvore(rede.usuarios_por_id, id, temp)){
+            saida << "ERROR USER_EXISTS\n";
+        }else{
+            cadastrarUsuario(rede, id, username, nome_completo, saida);
+        }
     }else if(funcao == "FIND_USER"){
-        // TODO
+        int id;
+        entrada >> id;
+        buscarUsuarioPorId(rede, id, saida);
     }else if(funcao == "FIND_USERNAME"){
-        // TODO
+        string username;
+        entrada >> username;
+        buscarUsuarioPorUsername(rede, username, saida);
     }else if(funcao == "LIST_USERS"){
-        // TODO
+        listarUsuarios(rede, saida);
     }else if(funcao == "FOLLOW"){
-        // TODO
+        int id_seguidor;
+        int id_seguido;
+        entrada >> id_seguidor >> id_seguido; 
+        Usuario* temp = nullptr;
+        if(buscar_arvore(rede.usuarios_por_id, id_seguidor, temp) && buscar_arvore(rede.usuarios_por_id, id_seguido, temp)){
+           seguirUsuario(rede, id_seguidor, id_seguido, saida);
+        }else
+            saida << "ERROR USER_NOT_FOUND\n";
+
     }else if(funcao == "LIST_FOLLOWING"){
         // TODO
     }else if(funcao == "ADD_POST"){
@@ -56,28 +71,53 @@ void cadastrarUsuario(MiniRede& rede, int id, const string& username, const stri
     novoUser->username = username;
     novoUser->nome_completo = nomeCompleto;
 
+    inicializar_lista(novoUser->usuarios_seguindo);
+    inicializar_lista(novoUser->publicacoes_postadas);
+    inicializar_fila(novoUser->notificacoes);
+
     // Salva na Árvore para busca por ID e listagem
     inserir_arvore(rede.usuarios_por_id, novoUser->id_usuario, novoUser);
 
     // Salva na Hash para busca por nome
     inserir_hash(rede.usuarios_por_username, novoUser->username, novoUser);
 
-    saida << "Usuario cadastrado com sucesso!\n";
+    
 }
 void buscarUsuarioPorId(MiniRede& rede, int id, std::ostream& saida) {
-    // TODO
+    Usuario* temp = nullptr;
+ 
+    if(buscar_arvore(rede.usuarios_por_id, id, temp)){
+        saida << "USER " << temp->id_usuario << " " << temp->username << " " << temp->nome_completo << endl;
+    }else
+        saida << "ERROR USER_NOT_FOUND\n";
+
 }
 
-void buscarUsuarioPorUsername(MiniRede& rede, const char username[], std::ostream& saida) {
-    // TODO
+void buscarUsuarioPorUsername(MiniRede& rede, const string& username, std::ostream& saida) {
+    Usuario* temp = nullptr;
+
+    if(buscar_hash(rede.usuarios_por_username, username, temp)){
+        saida << "USER " << temp->id_usuario << " " << temp->username << " " << temp->nome_completo << endl;
+    }else
+        saida << "ERROR USER_NOT_FOUND\n";
 }
 
 void listarUsuarios(MiniRede& rede, std::ostream& saida) {
-    // TODO
+    saida << "USERS_BEGIN\n";
+    listar_crescente(rede.usuarios_por_id, saida);
+    saida << "USERS_END\n";
 }
 
-void seguirUsuario(MiniRede& rede, int idSeguidor, int idSeguido, std::ostream& saida) {
-    // TODO
+void seguirUsuario(MiniRede& rede, int id_seguidor, int id_seguido, std::ostream& saida) {
+     Usuario* seguidor = nullptr;
+     Usuario* seguido = nullptr;
+     buscar_arvore(rede.usuarios_por_id, id_seguidor, seguidor);
+     buscar_arvore(rede.usuarios_por_id, id_seguido, seguido);
+     
+     inserir_final(seguidor->usuarios_seguindo, *seguido);
+
+     string notificacao = "NOTIFICATION FOLLOW " + seguidor->id_usuario;
+     enqueue(seguido->notificacoes, notificacao);
 }
 
 void listarSeguindo(MiniRede& rede, int idUsuario, std::ostream& saida) {

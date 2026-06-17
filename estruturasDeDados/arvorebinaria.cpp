@@ -33,7 +33,7 @@ void listar_recursivo(NoArvore* atual, std::ostream& saida) {
         listar_recursivo(atual->esq, saida); // 1. Vai tudo para a esquerda (menores)
         
         // 2. Imprime o nó atual (Raiz)
-        saida << "ID: " << atual->id << " | Username: @" << atual->user->username << "\n";
+        saida << "USER " << atual->id << " " << atual->user->username << " " << atual->user->nome_completo << endl;
         
         listar_recursivo(atual->dir, saida); // 3. Vai para a direita (maiores)
     }
@@ -78,7 +78,6 @@ bool buscar_arvore(const ArvoreBinaria &A, int id, Usuario* &resultado) {
 
 void listar_crescente(const ArvoreBinaria &A, std::ostream& saida) {
     if (A.raiz == nullptr) {
-        saida << "Nenhum usuario cadastrado.\n";
         return;
     }
     listar_recursivo(A.raiz, saida);

@@ -65,10 +65,10 @@ void processarComandos(MiniRede& rede, std::istream& entrada, std::ostream& said
 
 void cadastrarUsuario(MiniRede& rede, int id, const std::string& username, const std::string& nomeCompleto, std::ostream& saida);
 void buscarUsuarioPorId(MiniRede& rede, int id, std::ostream& saida);
-void buscarUsuarioPorUsername(MiniRede& rede, const char username[], std::ostream& saida);
+void buscarUsuarioPorUsername(MiniRede& rede, const string& username, std::ostream& saida);
 void listarUsuarios(MiniRede& rede, std::ostream& saida);
 
-void seguirUsuario(MiniRede& rede, int idSeguidor, int idSeguido, std::ostream& saida);
+void seguirUsuario(MiniRede& rede, int id_seguidor, int id_seguido, std::ostream& saida);
 void listarSeguindo(MiniRede& rede, int idUsuario, std::ostream& saida);
 
 void cadastrarPublicacao(MiniRede& rede, int idPost, int idAutor, int timestamp, const char texto[], std::ostream& saida);
