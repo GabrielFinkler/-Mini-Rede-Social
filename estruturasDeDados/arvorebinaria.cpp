@@ -1,6 +1,7 @@
 #include "arvoreBinaria.hpp"
-#include "base.hpp"
+#include "../base.hpp"
 
+using namespace std;
 
 //inserir usando recursão
 NoArvore* inserir_recursivo(NoArvore* atual, int id, Usuario* user, bool &inseriu) {

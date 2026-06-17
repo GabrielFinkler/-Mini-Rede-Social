@@ -2,12 +2,12 @@
 #define MINI_REDE_H
 
 #include <string>
-#include "listaDuplamente.hpp"
-#include "fila.hpp"
-#include "tabelahash.hpp"
-#include "arvoreBinaria.hpp"
+#include "estruturasDeDados\listaDuplamente.hpp"
+#include "estruturasDeDados\fila.hpp"
+#include "estruturasDeDados\tabelahash.hpp"
+#include "estruturasDeDados\arvoreBinaria.hpp"
 
-using namespace std;
+
 
 const int TAM_USERNAME = 50;
 const int TAM_NOME = 100;
@@ -26,18 +26,10 @@ const int TAM_COMANDO = 30;
 // - nos para fila de notificacoes
 //
 // Os campos de cada struct fazem parte do projeto dos alunos.
-template <typename T>
-struct No {
-    T valor;         
-    No*  prox;  
-    No*  ant;
-
-    // Construtor 
-    No(T value) : valor(value), prox(nullptr), ant(nullptr) {}
-};
 
 
-
+struct Usuario;
+struct Publicacao;
 
 struct MiniRede {
     ArvoreBinaria usuarios_por_id;
@@ -48,11 +40,11 @@ struct MiniRede {
 
 struct Usuario{
     int id_usuario;
-    string username;
-    string nome_completo;
+    std::string username;
+    std::string nome_completo;
     Lista<Usuario> usuarios_seguindo;
     Lista<Publicacao> publicacoes_postadas;
-    Fila<string> notificacoes;
+    Fila<std::string> notificacoes;
 
 };
 
@@ -60,7 +52,7 @@ struct Publicacao{
     int id_publi;
     int id_usuario;
     int timestamp;
-    string texto;
+    std::string texto;
     int likes;
     Lista<Usuario> likers;
 };
@@ -71,7 +63,7 @@ void inicializarMiniRede(MiniRede& rede);
 void liberarMiniRede(MiniRede& rede);
 void processarComandos(MiniRede& rede, std::istream& entrada, std::ostream& saida);
 
-void cadastrarUsuario(MiniRede& rede, int id, const char username[], const char nomeCompleto[], std::ostream& saida);
+void cadastrarUsuario(MiniRede& rede, int id, const std::string& username, const std::string& nomeCompleto, std::ostream& saida);
 void buscarUsuarioPorId(MiniRede& rede, int id, std::ostream& saida);
 void buscarUsuarioPorUsername(MiniRede& rede, const char username[], std::ostream& saida);
 void listarUsuarios(MiniRede& rede, std::ostream& saida);
@@ -96,7 +88,7 @@ void listarTopPosts(MiniRede& rede, int k, std::ostream& saida);
 // - inserir/buscar/liberar tabela hash
 // - enfileirar/desenfileirar notificacoes
 // - manipular listas encadeadas
-// - ordenar vetores auxiliares para feed e ranking
+// - ordenar vetores auxiliares para feedranking
 
 
 #endif

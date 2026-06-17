@@ -1,7 +1,19 @@
+#ifndef LISTA_DUPLAMENTE_H
+#define LISTA_DUPLAMENTE_H
+
 #include <iostream>
 
-using namespace std;
 
+
+template <typename T>
+struct No {
+    T valor;         
+    No*  prox;  
+    No*  ant;
+
+    // Construtor 
+    No(T value) : valor(value), prox(nullptr), ant(nullptr) {}
+};
 
 template <typename T>
 struct Lista {
@@ -13,7 +25,7 @@ struct Lista {
 };
 
 template <typename T>
-void inicializar(Lista<T> &L) {
+void inicializar_lista(Lista<T> &L) {
     L.inicio = nullptr;
     L.fim = nullptr;
 }
@@ -94,7 +106,7 @@ bool remover_valor(Lista<T> &L, T valor) {
                 }else{
                     // remove ultimo nó
                     atual->ant->prox = nullptr;
-                    L.fim = atual->ant; Atualizar o ponteiro fim da lista
+                    L.fim = atual->ant; // Atualizar o ponteiro fim da lista
                     delete atual;
                     return true;
                 }
@@ -121,59 +133,63 @@ bool remover_valor(Lista<T> &L, T valor) {
 template <typename T>
 void imprimir_frente(const Lista<T> &L) {
     if (vazia(L)) {
-        cout << "[ ]\n";
+        std::cout << "[ ]\n";
         return;
     }
 
     if (eh_circular(L)) {
-        cout << "A lista e circular. Use imprimir_circular.\n";
+        std::cout << "A lista e circular. Use imprimir_circular.\n";
         return;
     }
 
     No<T>* atual = L.inicio;
-    cout << "[ ";
+    std::cout << "[ ";
     while (atual != nullptr) {
-        cout << atual->valor << " ";
+        std::cout << atual->valor << " ";
         atual = atual->prox;
     }
-    cout << "]\n";
+    std::cout << "]\n";
 }
 
 template <typename T>
 void imprimir_reverso(const Lista<T> &L) {
     if (vazia(L)) {
-        cout << "[ ]\n";
+        std::cout << "[ ]\n";
         return;
     }
 
     if (eh_circular(L)) {
-        cout << "A lista e circular. Use imprimir_circular.\n";
+        std::cout << "A lista e circular. Use imprimir_circular.\n";
         return;
     }
 
     No<T>* atual = L.fim;
-    cout << "[ ";
+    std::cout << "[ ";
     while (atual != nullptr) {
-        cout << atual->valor << " ";
+        std::cout << atual->valor << " ";
         atual = atual->ant;
     }
-    cout << "]\n";
+    std::cout << "]\n";
 }
 
 template <typename T>
 void imprimir_circular(Lista<T> &L, int n) {
     if (vazia(L)) {
-        cout << "[ ]\n";
+        std::cout << "[ ]\n";
         return;
     }
     
     No<T>* atual = L.inicio;
-    cout << "[ ";
+    std::cout << "[ ";
     for (int i = 0; i < n; i++) {
-        cout << atual->valor << " ";
+        if (atual == nullptr) {
+            std::cout << "(fim) ";
+            break;
+        }
+        std::cout << atual->valor << " ";
         atual = atual->prox;
     }
-    cout << "]\n";
+    std::cout << "]\n";
 }
 
 template <typename T>
@@ -194,3 +210,5 @@ void liberar_lista(Lista<T> &L) {
     L.inicio = nullptr;
     L.fim = nullptr;
 }
+
+#endif // LISTA_DUPLAMENTE_H

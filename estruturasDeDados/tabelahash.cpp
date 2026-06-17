@@ -1,5 +1,6 @@
 #include "tabelaHash.hpp"
 
+using namespace std;
 // Inicializa a tabela alocando o vetor de baldes
 void inicializar_hash(TabelaHashUsuarios &TH, int capacidade) {
     TH.capacidade = capacidade;
