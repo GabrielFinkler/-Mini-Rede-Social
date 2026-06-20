@@ -28,6 +28,7 @@ void processarComandos(MiniRede& rede, std::istream& entrada, std::ostream& said
             saida << "ERROR USER_EXISTS\n";
         }else{
             cadastrarUsuario(rede, id, username, nome_completo, saida);
+            saida << "USER_ADDED\n";
         }
     }else if(funcao == "FIND_USER"){
         int id;
@@ -42,19 +43,81 @@ void processarComandos(MiniRede& rede, std::istream& entrada, std::ostream& said
     }else if(funcao == "FOLLOW"){
         int id_seguidor;
         int id_seguido;
-        entrada >> id_seguidor >> id_seguido; 
-        Usuario* temp = nullptr;
-        if(buscar_arvore(rede.usuarios_por_id, id_seguidor, temp) && buscar_arvore(rede.usuarios_por_id, id_seguido, temp)){
-           seguirUsuario(rede, id_seguidor, id_seguido, saida);
+        entrada >> id_seguidor >> id_seguido;  
+        Usuario* seguidor = nullptr;
+        Usuario* seguido = nullptr;
+        
+        if(buscar_arvore(rede.usuarios_por_id, id_seguidor, seguidor) && buscar_arvore(rede.usuarios_por_id, id_seguido, seguido)){
+            bool ja_segue = contem(seguidor->usuarios_seguindo, [id_seguido](const Usuario& u) {
+            
+            return u.id_usuario == id_seguido; 
+            });
+            if((seguidor != seguido) && (!ja_segue)){
+            seguirUsuario(rede, id_seguidor, id_seguido, saida);}else
+            if(seguidor == seguido){
+            saida << "ERROR CANNOT_FOLLOW_SELF\n";
+            }else if(!ja_segue && seguidor == seguido){
+            saida << "ERROR ALREADY_FOLLOWING\n";}
+        
         }else
             saida << "ERROR USER_NOT_FOUND\n";
 
     }else if(funcao == "LIST_FOLLOWING"){
-        // TODO
+        int id_seguidor;
+        entrada >> id_seguidor;
+        Usuario* temp = nullptr;
+        if (buscar_arvore(rede.usuarios_por_id, id_seguidor, temp)){
+            listarSeguindo(rede, id_seguidor, saida);
+        }else
+            saida << "ERROR USER_NOT_FOUND";
+
     }else if(funcao == "ADD_POST"){
-        // TODO
+        int post_id;
+        int author_id;
+        int timestamp;
+        string texto;
+        Usuario* temp = nullptr;
+        entrada >> post_id >> author_id >> timestamp >> texto; 
+        if (buscar_arvore(rede.usuarios_por_id, author_id, temp)){
+            bool ja_publi = contem(temp->publicacoes_postadas, [post_id](const Publicacao& u) {
+            
+            return u.id_publi == post_id; 
+            });
+            if(!ja_publi){
+                cadastrarPublicacao(rede, post_id, author_id, timestamp, texto, saida)
+            }else{
+                saida << "ERROR POST_EXISTS";
+
+            }
+        }else{
+            saida << "ERROR USER_NOT_FOUND";
+        }
+
     }else if(funcao == "LIKE"){
-        // TODO
+        int id_autor;
+        int id_post;
+        Usuario* temp = nullptr;
+        entrada >> id_autor >> id_post;
+        if(buscar_arvore(rede.usuarios_por_id, id_autor, temp)){
+            Publicacao* publi_encontrada = buscar_na_lista(temp->publicacoes_postadas, [id_post](const Publicacao& p) {
+            return p.id_publi == id_post;
+            });
+            if(publi_encontrada != nullptr){
+                bool ja_curtiu = contem(publi_encontrada->likers, [id_autor](const Publicacao& u) {
+            
+                return u.id_usuario == id_autor; 
+                //if(!ja)
+            });
+                
+            }else{
+                saida << "ERROR POST_NOT_FOUND";
+            }
+
+        }else{
+            saida << "ERROR USER_NOT_FOUND";
+        }
+
+
     }else if(funcao == "GET_NOTIFICATIONS"){
         // TODO
     }else if(funcao == "FEED"){
@@ -115,17 +178,33 @@ void seguirUsuario(MiniRede& rede, int id_seguidor, int id_seguido, std::ostream
      buscar_arvore(rede.usuarios_por_id, id_seguido, seguido);
      
      inserir_final(seguidor->usuarios_seguindo, *seguido);
+     saida << "FOLLOWED\n";
 
      string notificacao = "NOTIFICATION FOLLOW " + seguidor->id_usuario;
      enqueue(seguido->notificacoes, notificacao);
 }
 
 void listarSeguindo(MiniRede& rede, int idUsuario, std::ostream& saida) {
-    // TODO
+    Usuario* seguidor = nullptr;
+    buscar_arvore(rede.usuarios_por_id, idUsuario, seguidor);
+    saida << "FOLLOWING_BEGIN\n";
+    ordenar_lista(seguidor->usuarios_seguindo, [](const Usuario& a, const Usuario& b){
+        return a.id_usuario < b.id_usuario;
+    });
+    imprimir_frente_usuario(seguidor->usuarios_seguindo,saida);
+    saida << "FOLLOWING_END\n";
 }
 
-void cadastrarPublicacao(MiniRede& rede, int idPost, int idAutor, int timestamp, const char texto[], std::ostream& saida) {
-    // TODO
+void cadastrarPublicacao(MiniRede& rede, int idPost, int idAutor, int timestamp, string texto, std::ostream& saida) {
+    Usuario* autor = nullptr;
+    Publicacao* publi;
+    publi->id_publi = idPost;
+    publi->id_usuario = idAutor;
+    publi->timestamp = timestamp;
+    publi->texto = texto;
+    buscar_arvore(rede.usuarios_por_id, idAutor, autor);
+    inserir_final(autor->publicacoes_postadas, *publi);
+    saida << "POST_ADDED";
 }
 
 void curtirPublicacao(MiniRede& rede, int idUsuario, int idPost, std::ostream& saida) {

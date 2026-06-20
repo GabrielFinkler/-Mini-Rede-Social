@@ -131,7 +131,7 @@ bool remover_valor(Lista<T> &L, T valor) {
 }
 
 template <typename T>
-void imprimir_frente(const Lista<T> &L) {
+void imprimir_frente_usuario(const Lista<T> &L, std::ostream& saida) {
     if (vazia(L)) {
         std::cout << "[ ]\n";
         return;
@@ -143,12 +143,29 @@ void imprimir_frente(const Lista<T> &L) {
     }
 
     No<T>* atual = L.inicio;
-    std::cout << "[ ";
     while (atual != nullptr) {
-        std::cout << atual->valor << " ";
+        saida << "USER " << atual->valor.id_usuario << " " << atual->valor.username << " " << atual->valor.nome_completo << std::endl;
         atual = atual->prox;
     }
-    std::cout << "]\n";
+}
+//naõ ta pronto
+template <typename T>
+void imprimir_frente_publicacoes(const Lista<T> &L, std::ostream& saida) {
+    if (vazia(L)) {
+        std::cout << "[ ]\n";
+        return;
+    }
+
+    if (eh_circular(L)) {
+        std::cout << "A lista e circular. Use imprimir_circular.\n";
+        return;
+    }
+
+    No<T>* atual = L.inicio;
+    while (atual != nullptr) {
+        saida << "USER " << atual->valor.id_usuario << " " << atual->valor.username << " " << atual->valor.nome_completo << std::endl;
+        atual = atual->prox;
+    }
 }
 
 template <typename T>
@@ -190,6 +207,65 @@ void imprimir_circular(Lista<T> &L, int n) {
         atual = atual->prox;
     }
     std::cout << "]\n";
+}
+
+//Bubble sort
+template <typename T, typename Comparador>
+void ordenar_lista(Lista<T>& lista, Comparador comparar) {
+    //lista vazia 
+    if (lista.inicio == nullptr || lista.inicio->prox == nullptr) return;
+
+    bool houve_troca;
+    do {
+        houve_troca = false;
+        No<T>* atual = lista.inicio;
+
+        while (atual->prox != nullptr) {
+            if (comparar(atual->prox->valor, atual->valor)) {
+
+                T temp = atual->valor;
+                atual->valor = atual->prox->valor;
+                atual->prox->valor = temp;
+
+                houve_troca = true;
+            }
+            atual = atual->prox;
+        }
+    } while (houve_troca);
+}
+
+//somente responde se tem na lista
+template <typename T, typename FuncaoBusca>
+bool contem(const Lista<T>& L, FuncaoBusca regra_de_busca) {
+    No<T>* atual = L.inicio;
+    
+    while (atual != nullptr) {
+        
+        if (regra_de_busca(atual->valor)) {
+            return true; 
+        }
+        atual = atual->prox;
+    }
+    
+    
+    return false; 
+}
+
+//responde umm ponteiro para quem ela achou
+template <typename T, typename FuncaoBusca>
+T* buscar_na_lista(const Lista<T>& L, FuncaoBusca regra_de_busca) {
+    No<T>* atual = L.inicio;
+    
+    while (atual != nullptr) {
+        if (regra_de_busca(atual->valor)) {
+            
+            return &(atual->valor); 
+        }
+        atual = atual->prox;
+    }
+    
+    
+    return nullptr; 
 }
 
 template <typename T>
