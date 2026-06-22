@@ -148,11 +148,10 @@ void imprimir_frente_usuario(const Lista<T> &L, std::ostream& saida) {
         atual = atual->prox;
     }
 }
-//naõ ta pronto
 template <typename T>
-void imprimir_frente_publicacoes(const Lista<T> &L, std::ostream& saida) {
+void imprimir_frente_publicacoes(const Lista<T> &L, int k,std::ostream& saida) {
+    int contador = 0;
     if (vazia(L)) {
-        std::cout << "[ ]\n";
         return;
     }
 
@@ -162,8 +161,9 @@ void imprimir_frente_publicacoes(const Lista<T> &L, std::ostream& saida) {
     }
 
     No<T>* atual = L.inicio;
-    while (atual != nullptr) {
-        saida << "USER " << atual->valor.id_usuario << " " << atual->valor.username << " " << atual->valor.nome_completo << std::endl;
+    while (atual != nullptr && contador < k) {
+        saida << "POST " << atual->valor.id_publi << " " << atual->valor.id_usuario << " " << atual->valor.timestamp << " " << atual->valor.likes << " " << atual->valor.texto << std::endl;
+        contador++;
         atual = atual->prox;
     }
 }

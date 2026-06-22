@@ -6,7 +6,6 @@
 
 using namespace std;
 
-// 1. Definição da Struct Fila como Template
 template <typename T> struct Fila {
   No<T> *inicio;
   No<T> *fim;
@@ -27,7 +26,6 @@ template <typename T> bool fila_vazia(const Fila<T> &F) {
 template <typename T> bool fila_cheia(const Fila<T> &F) { return false; }
 
 template <typename T> bool enqueue(Fila<T> &F, T valor) {
-  // Usando o construtor do No que criamos anteriormente
   No<T> *atual = new No<T>(valor);
 
   if (fila_vazia(F)) {
@@ -61,15 +59,18 @@ template <typename T> bool dequeue(Fila<T> &F) {
 
 template <typename T> T front(const Fila<T> &F) { return F.inicio->valor; }
 
-template <typename T> void imprimir_fila(const Fila<T> &F) {
-  No<T> *atual = F.inicio;
-  cout << "[ ";
-  while (atual != nullptr) {
-    // ATENÇÃO: Veja o aviso importante sobre esta linha logo abaixo
-    cout << atual->valor << " ";
-    atual = atual->prox;
-  }
-  cout << "]\n";
+template <typename T> 
+void print_notificacoes(Fila<T> &F, int k, std::ostream& saida) {
+    int contador = 0;
+
+    while (!fila_vazia(F) && contador < k) {
+
+        saida << front(F); 
+
+        dequeue(F); 
+        
+        contador++;
+    }
 }
 
 #endif // FILA_H
