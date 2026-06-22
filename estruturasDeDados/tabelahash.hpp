@@ -5,20 +5,17 @@
 
 
 
-// Declaração antecipada para o compilador saber que 'Usuario' existe
 struct Usuario;
 
-// Nó específico para a Hash de Usuários
 struct NoHashUsuario {
-    std::string username; // A chave
-    Usuario* user;   // O valor (ponteiro para o usuário real)
+    std::string username; 
+    Usuario* user;   
     NoHashUsuario* prox;
 
     // Construtor
     NoHashUsuario(std::string u, Usuario* us) : username(u), user(us), prox(nullptr) {}
 };
 
-// Estrutura da Tabela Hash específica
 struct TabelaHashUsuarios {
     NoHashUsuario** baldes;
     int capacidade;

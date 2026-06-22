@@ -14,18 +14,6 @@ const int TAM_NOME = 100;
 const int TAM_TEXTO = 280;
 const int TAM_COMANDO = 30;
 
-// TODO: definir as structs principais do trabalho.
-//
-// Sugestao de structs que provavelmente serao necessarias:
-// - Usuario
-// - Publicacao
-// - MiniRede
-// - nos para lista encadeada
-// - nos para arvore binaria de usuarios por id
-// - nos para tabela hash de usernames
-// - nos para fila de notificacoes
-//
-// Os campos de cada struct fazem parte do projeto dos alunos.
 
 
 struct Usuario;
@@ -78,17 +66,7 @@ void consultarNotificacoes(MiniRede& rede, int idUsuario, int k, std::ostream& s
 void gerarFeed(MiniRede& rede, int idUsuario, int k, std::ostream& saida);
 void listarTopPosts(MiniRede& rede, int k, std::ostream& saida);
 
-// TODO: declarar aqui as funcoes auxiliares escolhidas pelo grupo.
-//
-// Exemplos de responsabilidades auxiliares:
-// - buscar usuario por id
-// - buscar usuario por username
-// - buscar publicacao por id
-// - inserir/listar/liberar arvore
-// - inserir/buscar/liberar tabela hash
-// - enfileirar/desenfileirar notificacoes
-// - manipular listas encadeadas
-// - ordenar vetores auxiliares para feedranking
+
 
 
 #endif

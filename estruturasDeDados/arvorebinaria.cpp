@@ -3,23 +3,18 @@
 
 using namespace std;
 
-//inserir usando recursão
 NoArvore* inserir_recursivo(NoArvore* atual, int id, Usuario* user, bool &inseriu) {
-    // Se achou um espaço vazio, cria o nó aqui!
     if (atual == nullptr) {
         inseriu = true;
         return new NoArvore(id, user);
     }
 
-    // Se o ID for menor, vai para a esquerda
     if (id < atual->id) {
         atual->esq = inserir_recursivo(atual->esq, id, user, inseriu);
     } 
-    // Se o ID for maior, vai para a direita
     else if (id > atual->id) {
         atual->dir = inserir_recursivo(atual->dir, id, user, inseriu);
     } 
-    // Se for igual, não insere (ID duplicado!)
     else {
         inseriu = false;
     }
@@ -27,23 +22,22 @@ NoArvore* inserir_recursivo(NoArvore* atual, int id, Usuario* user, bool &inseri
     return atual;
 }
 
-// impressão Em Ordem (In-Order: Esq -> Raiz -> Dir)
+// impressão Em Ordem
 void listar_recursivo(NoArvore* atual, std::ostream& saida) {
     if (atual != nullptr) {
-        listar_recursivo(atual->esq, saida); // 1. Vai tudo para a esquerda (menores)
+        listar_recursivo(atual->esq, saida); 
         
-        // 2. Imprime o nó atual (Raiz)
         saida << "USER " << atual->id << " " << atual->user->username << " " << atual->user->nome_completo << endl;
         
-        listar_recursivo(atual->dir, saida); // 3. Vai para a direita (maiores)
+        listar_recursivo(atual->dir, saida); 
     }
 }
 
-//deletar a árvore (Pós-Ordem: Esq -> Dir -> Raiz)
+
 void liberar_recursivo(NoArvore* atual) {
     if (atual != nullptr) {
-        liberar_recursivo(atual->esq); // Deleta os filhos da esquerda primeiro
-        liberar_recursivo(atual->dir); // Deleta os filhos da direita
+        liberar_recursivo(atual->esq); 
+        liberar_recursivo(atual->dir); 
         delete atual;                  
     }
 }

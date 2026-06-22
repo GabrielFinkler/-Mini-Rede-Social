@@ -5,28 +5,25 @@
 
 
 
-// Declaração antecipada
+
 struct Usuario;
 
-// Nó da Árvore
+
 struct NoArvore {
     int id;
-    Usuario* user;   // Ponteiro para o usuário real
-    NoArvore* esq;   // Filho da esquerda (IDs menores)
-    NoArvore* dir;   // Filho da direita (IDs maiores)
+    Usuario* user;   
+    NoArvore* esq;   
+    NoArvore* dir;   
 
     // Construtor
     NoArvore(int i, Usuario* u) : id(i), user(u), esq(nullptr), dir(nullptr) {}
 };
 
-// Estrutura principal da Árvore
+
 struct ArvoreBinaria {
     NoArvore* raiz;
 };
 
-// ==========================================
-// PROTOTIPAÇÃO DAS FUNÇÕES
-// ==========================================
 void inicializar_arvore(ArvoreBinaria &A);
 bool inserir_arvore(ArvoreBinaria &A, int id, Usuario* user);
 bool buscar_arvore(const ArvoreBinaria &A, int id, Usuario* &resultado);
